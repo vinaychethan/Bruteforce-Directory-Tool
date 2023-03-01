@@ -1,43 +1,50 @@
 #!/bin/python3 
 
+#!/bin/python3 
+
 import requests
 import argparse
 import sys
+import os
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('-w','--wordlist', type=str, required=True,help="Switch for Wordlist")
+parser.add_argument('-w','--wordlist', type=str, required=True, help="Switch for Wordlist")
 parser.add_argument('-u','--url', type=str, required=True, help="Switch for URL")
+parser.add_argument('-e','--extension', type=str, required=False, help="Switch for Extension")
 args = parser.parse_args()
 
-print("[+] Wordlist: ",args.wordlist)
+print("[+] Wordlist: ", args.wordlist)
 print("[+] URL: ", args.url)
 
 # Request Headers
 headers = {
-	'User-Agent':'Macintosh Mac OS X'
+    'User-Agent':'Macintosh Mac OS X'
 }
 
-#Working with file
-file = open(args.wordlist,'r')
-lines = file.readlines()
+# Sanitize wordlist input
+wordlist_path = os.path.abspath(args.wordlist)
 
-#Checking if URL schema exists in the url
+# Check if URL schema exists in the url
 if ('http' in args.url) or ('https' in args.url):
-	pass
+    pass
 else:
-	print('Please enter a URL Schema')
-	sys.exit()
+    print('Please enter a URL Schema')
+    sys.exit()
 
 # Parsing through each word in the wordlist
 try:
-	for line in lines:
-		line = line.strip("\n")
-		r = requests.get(args.url+'/'+line, headers=headers)
-		if(r.status_code != 404):
-			print(args.url+'/'+line, ":", r.status_code)
+    with open(wordlist_path, 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            line = line.strip("\n")
+            if args.extension:
+                line = line + '.' + args.extension.lstrip('.')
+            r = requests.get(args.url+'/'+line, headers=headers)
+            if(r.status_code != 404):
+                print(args.url+'/'+line, ":", r.status_code)
 except:
-	print("Error Occured")
+    print("Error Occurred")
 
 
 # Assignment: You can add an extra argument and ask for an extension to be appended towards the end
