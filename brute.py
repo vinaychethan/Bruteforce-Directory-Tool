@@ -23,7 +23,8 @@ headers = {
 }
 
 # Sanitize wordlist input
-wordlist_path = os.path.abspath(args.wordlist)
+wordlist_filename = os.path.basename(args.wordlist)
+wordlist_dir = os.path.dirname(os.path.abspath(args.wordlist))
 
 # Check if URL schema exists in the url
 if ('http' in args.url) or ('https' in args.url):
@@ -34,7 +35,7 @@ else:
 
 # Parsing through each word in the wordlist
 try:
-    with open(wordlist_path, 'r') as file:
+    with open(os.path.join(wordlist_dir, wordlist_filename), 'r') as file:
         lines = file.readlines()
         for line in lines:
             line = line.strip("\n")
@@ -45,6 +46,7 @@ try:
                 print(args.url+'/'+line, ":", r.status_code)
 except:
     print("Error Occurred")
+
 
 
 # Assignment: You can add an extra argument and ask for an extension to be appended towards the end
