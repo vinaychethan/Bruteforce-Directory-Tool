@@ -1,7 +1,5 @@
 #!/bin/python3 
 
-#!/bin/python3 
-
 import requests
 import argparse
 import sys
@@ -46,7 +44,5 @@ try:
                 print(args.url+'/'+line, ":", r.status_code)
 except:
     print("Error Occurred")
-
-
 
 # Assignment: You can add an extra argument and ask for an extension to be appended towards the end
